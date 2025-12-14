@@ -1,0 +1,271 @@
+=== Plan for crime_comm (spatial join crimes ? census blocks) ===
+== Parsed Logical Plan ==
+'Project ['c.DR_NO, 'c.year, 'b.COMM, 'b.POP20]
++- 'Join Inner, 'ST_Contains('b.block_geom, 'c.crime_geom)
+   :- 'SubqueryAlias c
+   :  +- 'UnresolvedRelation [crime_points], [], false
+   +- 'SubqueryAlias b
+      +- 'UnresolvedRelation [census_blocks], [], false
+
+== Analyzed Logical Plan ==
+DR_NO: int, year: int, COMM: string, POP20: bigint
+Project [DR_NO#31384, year#31573, COMM#31620, POP20#31621L]
++- Join Inner,  **org.apache.spark.sql.sedona_sql.expressions.ST_Contains**
+   :- SubqueryAlias c
+   :  +- SubqueryAlias crime_points
+   :     +- View (`crime_points`, [DR_NO#31384,year#31573,crime_geom#31632])
+   :        +- Project [DR_NO#31384, year#31573, crime_geom#31632]
+   :           +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 7 more fields]
+   :              +- Filter ((isnotnull(LAT#31410) AND isnotnull(LON#31411)) AND NOT ((LAT#31410 = 0.0) AND (LON#31411 = 0.0)))
+   :                 +- Filter ((year#31573 = 2020) OR (year#31573 = 2021))
+   :                    +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 6 more fields]
+   :                       +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 5 more fields]
+   :                          +- Union false, false
+   :                             :- Relation [DR_NO#31384,Date Rptd#31385,DATE OCC#31386,TIME OCC#31387,AREA#31388,AREA NAME#31389,Rpt Dist No#31390,Part 1-2#31391,Crm Cd#31392,Crm Cd Desc#31393,Mocodes#31394,Vict Age#31395,Vict Sex#31396,Vict Descent#31397,Premis Cd#31398,Premis Desc#31399,Weapon Used Cd#31400,Weapon Desc#31401,Status#31402,Status Desc#31403,Crm Cd 1#31404,Crm Cd 2#31405,Crm Cd 3#31406,Crm Cd 4#31407,... 4 more fields] csv
+   :                             +- Project [DR_NO#31458, Date Rptd#31459, DATE OCC#31460, TIME OCC#31461, AREA#31462, AREA NAME#31463, Rpt Dist No#31464, Part 1-2#31465, Crm Cd#31466, Crm Cd Desc#31467, Mocodes#31468, Vict Age#31469, Vict Sex#31470, Vict Descent#31471, Premis Cd#31472, Premis Desc#31473, Weapon Used Cd#31474, Weapon Desc#31475, Status#31476, Status Desc#31477, Crm Cd 1#31478, Crm Cd 2#31479, Crm Cd 3#31480, Crm Cd 4#31481, ... 4 more fields]
+   :                                +- Relation [DR_NO#31458,Date Rptd#31459,DATE OCC#31460,TIME OCC#31461,AREA#31462,AREA NAME#31463,Rpt Dist No#31464,Part 1-2#31465,Crm Cd#31466,Crm Cd Desc#31467,Mocodes#31468,Vict Age#31469,Vict Sex#31470,Vict Descent#31471,Premis Cd#31472,Premis Desc#31473,Weapon Used Cd#31474,Weapon Desc#31475,Status#31476,Status Desc#31477,Crm Cd 1#31478,Crm Cd 2#31479,Crm Cd 3#31480,Crm Cd 4#31481,... 4 more fields] csv
+   +- SubqueryAlias b
+      +- SubqueryAlias census_blocks
+         +- View (`census_blocks`, [COMM#31620,POP20#31621L,ZCTA20#31622,block_geom#31623])
+            +- Filter (isnotnull(POP20#31621L) AND (POP20#31621L > cast(0 as bigint)))
+               +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS ZCTA20#31622, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+                  +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+
+== Optimized Logical Plan ==
+Project [DR_NO#31384, year#31573, COMM#31620, POP20#31621L]
++- Join Inner,  **org.apache.spark.sql.sedona_sql.expressions.ST_Contains**
+   :- Project [DR_NO#31384, year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) AS year#31573,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS crime_geom#31632]
+   :  +- Filter ((((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)) AND ((isnotnull(LAT#31410) AND isnotnull(LON#31411)) AND (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0)))) AND isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  ))
+   :     +- InMemoryRelation [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 4 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+   :           +- Union
+   :              :- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+   :              +- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+   +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+      +- Filter (isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0))
+         +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [DR_NO#31384, year#31573, COMM#31620, POP20#31621L]
+   +- RangeJoin crime_geom#31632: geometry, block_geom#31623: geometry, WITHIN
+      :- Project [DR_NO#31384, year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) AS year#31573,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS crime_geom#31632]
+      :  +- Filter ((((((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)) AND isnotnull(LAT#31410)) AND isnotnull(LON#31411)) AND (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0))) AND isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  ))
+      :     +- InMemoryTableScan [DATE OCC#31386, DR_NO#31384, LAT#31410, LON#31411], [((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)), isnotnull(LAT#31410), isnotnull(LON#31411), (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0)), isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  )]
+      :           +- InMemoryRelation [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 4 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+      :                 +- Union
+      :                    :- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+      :                    +- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+      +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+         +- Filter (isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0))
+            +- FileScan json [geometry#31613,properties#31614] Batched: false, DataFilters: [isnotnull(properties#31614.POP20), (properties#31614.POP20 > 0)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<geometry:struct<coordinates:array<array<array<string>>>,type:string>,properties:struct<BG2...
+
+
+=== Plan for census_income (join census ? income) ===
+== Parsed Logical Plan ==
+'Join UsingJoin(Inner, [zip_str])
+:- Project [COMM#31620, POP20#31621L, cast(ZCTA20#31622 as string) AS zip_str#31725]
+:  +- Filter (isnotnull(POP20#31621L) AND (POP20#31621L > cast(0 as bigint)))
+:     +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS ZCTA20#31622, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+:        +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
++- Project [zip_str#31711, median_income#31717]
+   +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+      +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, cast(Zip Code#31705 as string) AS zip_str#31711]
+         +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Analyzed Logical Plan ==
+zip_str: string, COMM: string, POP20: bigint, median_income: double
+Project [zip_str#31725, COMM#31620, POP20#31621L, median_income#31717]
++- Join Inner, (zip_str#31725 = zip_str#31711)
+   :- Project [COMM#31620, POP20#31621L, cast(ZCTA20#31622 as string) AS zip_str#31725]
+   :  +- Filter (isnotnull(POP20#31621L) AND (POP20#31621L > cast(0 as bigint)))
+   :     +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS ZCTA20#31622, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+   :        +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+   +- Project [zip_str#31711, median_income#31717]
+      +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+         +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, cast(Zip Code#31705 as string) AS zip_str#31711]
+            +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Optimized Logical Plan ==
+Project [zip_str#31725, COMM#31620, POP20#31621L, median_income#31717]
++- Join Inner, (zip_str#31725 = zip_str#31711)
+   :- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS zip_str#31725]
+   :  +- Filter ((isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0)) AND isnotnull(properties#31614.ZCTA20))
+   :     +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+   +- Project [Zip Code#31705 AS zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+      +- Filter isnotnull(Zip Code#31705)
+         +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [zip_str#31725, COMM#31620, POP20#31621L, median_income#31717]
+   +- BroadcastHashJoin [zip_str#31725], [zip_str#31711], Inner, BuildRight, false
+      :- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS zip_str#31725]
+      :  +- Filter ((isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0)) AND isnotnull(properties#31614.ZCTA20))
+      :     +- FileScan json [properties#31614] Batched: false, DataFilters: [isnotnull(properties#31614.POP20), (properties#31614.POP20 > 0), isnotnull(properties#31614.ZCTA..., Format: JSON, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<properties:struct<BG20:string,BG20FIP_CURRENT:string,BGFIP20:string,CB20:string,CITY:strin...
+      +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=21571]
+         +- Project [Zip Code#31705 AS zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+            +- Filter isnotnull(Zip Code#31705)
+               +- FileScan csv [Zip Code#31705,Estimated Median Income#31707] Batched: false, DataFilters: [isnotnull(Zip Code#31705)], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_i..., PartitionFilters: [], PushedFilters: [IsNotNull(Zip Code)], ReadSchema: struct<Zip Code:string,Estimated Median Income:string>
+
+
+=== Plan for comm_stats (?????? DF ?? ??? ?? joins) ===
+== Parsed Logical Plan ==
+'Filter isnotnull('income_per_capita)
++- Project [COMM#31620, pop_2020#31677L, crime_count_2y#31675L, round(avg_annual_crime_rate#31682, 4) AS avg_annual_crime_rate#31765, round(income_per_capita#31744, 2) AS income_per_capita#31766]
+   +- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, avg_annual_crime_rate#31682, income_per_capita#31744]
+      +- Join Inner, (COMM#31620 = COMM#31755)
+         :- SubqueryAlias cr
+         :  +- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, (cast(crime_count_2y#31675L as double) / cast((cast(pop_2020#31677L as double) * 2.0) as double)) AS avg_annual_crime_rate#31682]
+         :     +- Aggregate [COMM#31620], [COMM#31620, count(distinct DR_NO#31384) AS crime_count_2y#31675L, first(POP20#31621L, false) AS pop_2020#31677L]
+         :        +- Project [DR_NO#31384, year#31573, COMM#31620, POP20#31621L]
+         :           +- Join Inner,  **org.apache.spark.sql.sedona_sql.expressions.ST_Contains**
+         :              :- SubqueryAlias c
+         :              :  +- SubqueryAlias crime_points
+         :              :     +- View (`crime_points`, [DR_NO#31384,year#31573,crime_geom#31632])
+         :              :        +- Project [DR_NO#31384, year#31573, crime_geom#31632]
+         :              :           +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 7 more fields]
+         :              :              +- Filter ((isnotnull(LAT#31410) AND isnotnull(LON#31411)) AND NOT ((LAT#31410 = 0.0) AND (LON#31411 = 0.0)))
+         :              :                 +- Filter ((year#31573 = 2020) OR (year#31573 = 2021))
+         :              :                    +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 6 more fields]
+         :              :                       +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 5 more fields]
+         :              :                          +- Union false, false
+         :              :                             :- Relation [DR_NO#31384,Date Rptd#31385,DATE OCC#31386,TIME OCC#31387,AREA#31388,AREA NAME#31389,Rpt Dist No#31390,Part 1-2#31391,Crm Cd#31392,Crm Cd Desc#31393,Mocodes#31394,Vict Age#31395,Vict Sex#31396,Vict Descent#31397,Premis Cd#31398,Premis Desc#31399,Weapon Used Cd#31400,Weapon Desc#31401,Status#31402,Status Desc#31403,Crm Cd 1#31404,Crm Cd 2#31405,Crm Cd 3#31406,Crm Cd 4#31407,... 4 more fields] csv
+         :              :                             +- Project [DR_NO#31458, Date Rptd#31459, DATE OCC#31460, TIME OCC#31461, AREA#31462, AREA NAME#31463, Rpt Dist No#31464, Part 1-2#31465, Crm Cd#31466, Crm Cd Desc#31467, Mocodes#31468, Vict Age#31469, Vict Sex#31470, Vict Descent#31471, Premis Cd#31472, Premis Desc#31473, Weapon Used Cd#31474, Weapon Desc#31475, Status#31476, Status Desc#31477, Crm Cd 1#31478, Crm Cd 2#31479, Crm Cd 3#31480, Crm Cd 4#31481, ... 4 more fields]
+         :              :                                +- Relation [DR_NO#31458,Date Rptd#31459,DATE OCC#31460,TIME OCC#31461,AREA#31462,AREA NAME#31463,Rpt Dist No#31464,Part 1-2#31465,Crm Cd#31466,Crm Cd Desc#31467,Mocodes#31468,Vict Age#31469,Vict Sex#31470,Vict Descent#31471,Premis Cd#31472,Premis Desc#31473,Weapon Used Cd#31474,Weapon Desc#31475,Status#31476,Status Desc#31477,Crm Cd 1#31478,Crm Cd 2#31479,Crm Cd 3#31480,Crm Cd 4#31481,... 4 more fields] csv
+         :              +- SubqueryAlias b
+         :                 +- SubqueryAlias census_blocks
+         :                    +- View (`census_blocks`, [COMM#31620,POP20#31621L,ZCTA20#31622,block_geom#31623])
+         :                       +- Filter (isnotnull(POP20#31621L) AND (POP20#31621L > cast(0 as bigint)))
+         :                          +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS ZCTA20#31622, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+         :                             +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+         +- SubqueryAlias inc
+            +- Project [COMM#31755, income_per_capita#31744]
+               +- Project [COMM#31755, pop_2020_comm#31738L, income_weighted_sum#31740, (income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)) AS income_per_capita#31744]
+                  +- Aggregate [COMM#31755], [COMM#31755, sum(POP20#31756L) AS pop_2020_comm#31738L, sum((cast(POP20#31756L as double) * median_income#31717)) AS income_weighted_sum#31740]
+                     +- Project [zip_str#31725, COMM#31755, POP20#31756L, median_income#31717]
+                        +- Join Inner, (zip_str#31725 = zip_str#31711)
+                           :- Project [COMM#31755, POP20#31756L, cast(ZCTA20#31757 as string) AS zip_str#31725]
+                           :  +- Filter (isnotnull(POP20#31756L) AND (POP20#31756L > cast(0 as bigint)))
+                           :     +- Project [properties#31753.COMM AS COMM#31755, properties#31753.POP20 AS POP20#31756L, properties#31753.ZCTA20 AS ZCTA20#31757, st_geomfromgeojson(to_json(geometry#31752, Some(UTC))) AS block_geom#31758]
+                           :        +- Relation [_corrupt_record#31751,geometry#31752,properties#31753,type#31754] json
+                           +- Project [zip_str#31711, median_income#31717]
+                              +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+                                 +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, cast(Zip Code#31705 as string) AS zip_str#31711]
+                                    +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Analyzed Logical Plan ==
+COMM: string, pop_2020: bigint, crime_count_2y: bigint, avg_annual_crime_rate: double, income_per_capita: double
+Filter isnotnull(income_per_capita#31766)
++- Project [COMM#31620, pop_2020#31677L, crime_count_2y#31675L, round(avg_annual_crime_rate#31682, 4) AS avg_annual_crime_rate#31765, round(income_per_capita#31744, 2) AS income_per_capita#31766]
+   +- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, avg_annual_crime_rate#31682, income_per_capita#31744]
+      +- Join Inner, (COMM#31620 = COMM#31755)
+         :- SubqueryAlias cr
+         :  +- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, (cast(crime_count_2y#31675L as double) / cast((cast(pop_2020#31677L as double) * 2.0) as double)) AS avg_annual_crime_rate#31682]
+         :     +- Aggregate [COMM#31620], [COMM#31620, count(distinct DR_NO#31384) AS crime_count_2y#31675L, first(POP20#31621L, false) AS pop_2020#31677L]
+         :        +- Project [DR_NO#31384, year#31573, COMM#31620, POP20#31621L]
+         :           +- Join Inner,  **org.apache.spark.sql.sedona_sql.expressions.ST_Contains**
+         :              :- SubqueryAlias c
+         :              :  +- SubqueryAlias crime_points
+         :              :     +- View (`crime_points`, [DR_NO#31384,year#31573,crime_geom#31632])
+         :              :        +- Project [DR_NO#31384, year#31573, crime_geom#31632]
+         :              :           +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 7 more fields]
+         :              :              +- Filter ((isnotnull(LAT#31410) AND isnotnull(LON#31411)) AND NOT ((LAT#31410 = 0.0) AND (LON#31411 = 0.0)))
+         :              :                 +- Filter ((year#31573 = 2020) OR (year#31573 = 2021))
+         :              :                    +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 6 more fields]
+         :              :                       +- Project [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 5 more fields]
+         :              :                          +- Union false, false
+         :              :                             :- Relation [DR_NO#31384,Date Rptd#31385,DATE OCC#31386,TIME OCC#31387,AREA#31388,AREA NAME#31389,Rpt Dist No#31390,Part 1-2#31391,Crm Cd#31392,Crm Cd Desc#31393,Mocodes#31394,Vict Age#31395,Vict Sex#31396,Vict Descent#31397,Premis Cd#31398,Premis Desc#31399,Weapon Used Cd#31400,Weapon Desc#31401,Status#31402,Status Desc#31403,Crm Cd 1#31404,Crm Cd 2#31405,Crm Cd 3#31406,Crm Cd 4#31407,... 4 more fields] csv
+         :              :                             +- Project [DR_NO#31458, Date Rptd#31459, DATE OCC#31460, TIME OCC#31461, AREA#31462, AREA NAME#31463, Rpt Dist No#31464, Part 1-2#31465, Crm Cd#31466, Crm Cd Desc#31467, Mocodes#31468, Vict Age#31469, Vict Sex#31470, Vict Descent#31471, Premis Cd#31472, Premis Desc#31473, Weapon Used Cd#31474, Weapon Desc#31475, Status#31476, Status Desc#31477, Crm Cd 1#31478, Crm Cd 2#31479, Crm Cd 3#31480, Crm Cd 4#31481, ... 4 more fields]
+         :              :                                +- Relation [DR_NO#31458,Date Rptd#31459,DATE OCC#31460,TIME OCC#31461,AREA#31462,AREA NAME#31463,Rpt Dist No#31464,Part 1-2#31465,Crm Cd#31466,Crm Cd Desc#31467,Mocodes#31468,Vict Age#31469,Vict Sex#31470,Vict Descent#31471,Premis Cd#31472,Premis Desc#31473,Weapon Used Cd#31474,Weapon Desc#31475,Status#31476,Status Desc#31477,Crm Cd 1#31478,Crm Cd 2#31479,Crm Cd 3#31480,Crm Cd 4#31481,... 4 more fields] csv
+         :              +- SubqueryAlias b
+         :                 +- SubqueryAlias census_blocks
+         :                    +- View (`census_blocks`, [COMM#31620,POP20#31621L,ZCTA20#31622,block_geom#31623])
+         :                       +- Filter (isnotnull(POP20#31621L) AND (POP20#31621L > cast(0 as bigint)))
+         :                          +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, properties#31614.ZCTA20 AS ZCTA20#31622, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+         :                             +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+         +- SubqueryAlias inc
+            +- Project [COMM#31755, income_per_capita#31744]
+               +- Project [COMM#31755, pop_2020_comm#31738L, income_weighted_sum#31740, (income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)) AS income_per_capita#31744]
+                  +- Aggregate [COMM#31755], [COMM#31755, sum(POP20#31756L) AS pop_2020_comm#31738L, sum((cast(POP20#31756L as double) * median_income#31717)) AS income_weighted_sum#31740]
+                     +- Project [zip_str#31725, COMM#31755, POP20#31756L, median_income#31717]
+                        +- Join Inner, (zip_str#31725 = zip_str#31711)
+                           :- Project [COMM#31755, POP20#31756L, cast(ZCTA20#31757 as string) AS zip_str#31725]
+                           :  +- Filter (isnotnull(POP20#31756L) AND (POP20#31756L > cast(0 as bigint)))
+                           :     +- Project [properties#31753.COMM AS COMM#31755, properties#31753.POP20 AS POP20#31756L, properties#31753.ZCTA20 AS ZCTA20#31757, st_geomfromgeojson(to_json(geometry#31752, Some(UTC))) AS block_geom#31758]
+                           :        +- Relation [_corrupt_record#31751,geometry#31752,properties#31753,type#31754] json
+                           +- Project [zip_str#31711, median_income#31717]
+                              +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+                                 +- Project [Zip Code#31705, Community#31706, Estimated Median Income#31707, cast(Zip Code#31705 as string) AS zip_str#31711]
+                                    +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Optimized Logical Plan ==
+Project [COMM#31620, pop_2020#31677L, crime_count_2y#31675L, round(avg_annual_crime_rate#31682, 4) AS avg_annual_crime_rate#31765, round(income_per_capita#31744, 2) AS income_per_capita#31766]
++- Join Inner, (COMM#31620 = COMM#31755)
+   :- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, (cast(crime_count_2y#31675L as double) / (cast(pop_2020#31677L as double) * 2.0)) AS avg_annual_crime_rate#31682]
+   :  +- Aggregate [COMM#31620], [COMM#31620, count(distinct DR_NO#31384) AS crime_count_2y#31675L, first(POP20#31621L, false) AS pop_2020#31677L]
+   :     +- Project [DR_NO#31384, COMM#31620, POP20#31621L]
+   :        +- Join Inner,  **org.apache.spark.sql.sedona_sql.expressions.ST_Contains**
+   :           :- Project [DR_NO#31384,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS crime_geom#31632]
+   :           :  +- Filter ((((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)) AND ((isnotnull(LAT#31410) AND isnotnull(LON#31411)) AND (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0)))) AND isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  ))
+   :           :     +- InMemoryRelation [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 4 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+   :           :           +- Union
+   :           :              :- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+   :           :              +- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+   :           +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+   :              +- Filter (((isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0)) AND isnotnull(properties#31614.COMM)) AND bloomfilter#37864 of [COMM#31755] filtering [properties#31614.COMM])
+   :                 :  +- Project [properties#31753.COMM AS COMM#31755, properties#31753.POP20 AS POP20#31756L, properties#31753.ZCTA20 AS zip_str#31725]
+   :                 :     +- Filter (((isnotnull(properties#31753.POP20) AND (properties#31753.POP20 > 0)) AND isnotnull(properties#31753.ZCTA20)) AND isnotnull(properties#31753.COMM))
+   :                 :        +- Relation [_corrupt_record#31751,geometry#31752,properties#31753,type#31754] json
+   :                 +- Relation [_corrupt_record#31612,geometry#31613,properties#31614,type#31615] json
+   +- Project [COMM#31755, (income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)) AS income_per_capita#31744]
+      +- Filter isnotnull(round((income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)), 2))
+         +- Aggregate [COMM#31755], [COMM#31755, sum(POP20#31756L) AS pop_2020_comm#31738L, sum((cast(POP20#31756L as double) * median_income#31717)) AS income_weighted_sum#31740]
+            +- Project [COMM#31755, POP20#31756L, median_income#31717]
+               +- Join Inner, (zip_str#31725 = zip_str#31711)
+                  :- Project [properties#31753.COMM AS COMM#31755, properties#31753.POP20 AS POP20#31756L, properties#31753.ZCTA20 AS zip_str#31725]
+                  :  +- Filter (((isnotnull(properties#31753.POP20) AND (properties#31753.POP20 > 0)) AND isnotnull(properties#31753.ZCTA20)) AND isnotnull(properties#31753.COMM))
+                  :     +- Relation [_corrupt_record#31751,geometry#31752,properties#31753,type#31754] json
+                  +- Project [Zip Code#31705 AS zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+                     +- Filter isnotnull(Zip Code#31705)
+                        +- Relation [Zip Code#31705,Community#31706,Estimated Median Income#31707] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [COMM#31620, pop_2020#31677L, crime_count_2y#31675L, round(avg_annual_crime_rate#31682, 4) AS avg_annual_crime_rate#31765, round(income_per_capita#31744, 2) AS income_per_capita#31766]
+   +- SortMergeJoin [COMM#31620], [COMM#31755], Inner
+      :- Sort [COMM#31620 ASC NULLS FIRST], false, 0
+      :  +- Project [COMM#31620, crime_count_2y#31675L, pop_2020#31677L, (cast(crime_count_2y#31675L as double) / (cast(pop_2020#31677L as double) * 2.0)) AS avg_annual_crime_rate#31682]
+      :     +- HashAggregate(keys=[COMM#31620], functions=[first(POP20#31621L, false), count(distinct DR_NO#31384)], output=[COMM#31620, crime_count_2y#31675L, pop_2020#31677L], schema specialized)
+      :        +- Exchange hashpartitioning(COMM#31620, 1000), ENSURE_REQUIREMENTS, [plan_id=21809]
+      :           +- HashAggregate(keys=[COMM#31620], functions=[merge_first(POP20#31621L, false), partial_count(distinct DR_NO#31384)], output=[COMM#31620, first#32350L, valueSet#32351, count#32354L], schema specialized)
+      :              +- HashAggregate(keys=[COMM#31620, DR_NO#31384], functions=[merge_first(POP20#31621L, false)], output=[COMM#31620, DR_NO#31384, first#32350L, valueSet#32351], schema specialized)
+      :                 +- Exchange hashpartitioning(COMM#31620, DR_NO#31384, 1000), ENSURE_REQUIREMENTS, [plan_id=21806]
+      :                    +- HashAggregate(keys=[COMM#31620, DR_NO#31384], functions=[partial_first(POP20#31621L, false)], output=[COMM#31620, DR_NO#31384, first#32350L, valueSet#32351], schema specialized)
+      :                       +- Project [DR_NO#31384, COMM#31620, POP20#31621L]
+      :                          +- RangeJoin crime_geom#31632: geometry, block_geom#31623: geometry, WITHIN
+      :                             :- Project [DR_NO#31384,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS crime_geom#31632]
+      :                             :  +- Filter ((((((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)) AND isnotnull(LAT#31410)) AND isnotnull(LON#31411)) AND (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0))) AND isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  ))
+      :                             :     +- InMemoryTableScan [DATE OCC#31386, DR_NO#31384, LAT#31410, LON#31411], [((year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2020) OR (year(cast(gettimestamp(substring(DATE OCC#31386, 1, 11), yyyy MMM dd, TimestampType, Some(UTC), false) as date)) = 2021)), isnotnull(LAT#31410), isnotnull(LON#31411), (NOT (LAT#31410 = 0.0) OR NOT (LON#31411 = 0.0)), isnotnull( **org.apache.spark.sql.sedona_sql.expressions.ST_Point**  )]
+      :                             :           +- InMemoryRelation [DR_NO#31384, Date Rptd#31385, DATE OCC#31386, TIME OCC#31387, AREA#31388, AREA NAME#31389, Rpt Dist No#31390, Part 1-2#31391, Crm Cd#31392, Crm Cd Desc#31393, Mocodes#31394, Vict Age#31395, Vict Sex#31396, Vict Descent#31397, Premis Cd#31398, Premis Desc#31399, Weapon Used Cd#31400, Weapon Desc#31401, Status#31402, Status Desc#31403, Crm Cd 1#31404, Crm Cd 2#31405, Crm Cd 3#31406, Crm Cd 4#31407, ... 4 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+      :                             :                 +- Union
+      :                             :                    :- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+      :                             :                    +- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+      :                             +- Project [properties#31614.COMM AS COMM#31620, properties#31614.POP20 AS POP20#31621L, st_geomfromgeojson(to_json(geometry#31613, Some(UTC))) AS block_geom#31623]
+      :                                +- Filter ((isnotnull(properties#31614.POP20) AND (properties#31614.POP20 > 0)) AND isnotnull(properties#31614.COMM))
+      :                                   +- FileScan json [geometry#31613,properties#31614] Batched: false, DataFilters: [isnotnull(properties#31614.POP20), (properties#31614.POP20 > 0), isnotnull(properties#31614.COMM)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<geometry:struct<coordinates:array<array<array<string>>>,type:string>,properties:struct<BG2...
+      +- Sort [COMM#31755 ASC NULLS FIRST], false, 0
+         +- Project [COMM#31755, (income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)) AS income_per_capita#31744]
+            +- Filter isnotnull(round((income_weighted_sum#31740 / cast(pop_2020_comm#31738L as double)), 2))
+               +- HashAggregate(keys=[COMM#31755], functions=[sum(POP20#31756L), sum((cast(POP20#31756L as double) * median_income#31717))], output=[COMM#31755, pop_2020_comm#31738L, income_weighted_sum#31740], schema specialized)
+                  +- Exchange hashpartitioning(COMM#31755, 1000), ENSURE_REQUIREMENTS, [plan_id=21745]
+                     +- HashAggregate(keys=[COMM#31755], functions=[partial_sum(POP20#31756L), partial_sum((cast(POP20#31756L as double) * median_income#31717))], output=[COMM#31755, sum#32357L, sum#32359], schema specialized)
+                        +- Project [COMM#31755, POP20#31756L, median_income#31717]
+                           +- BroadcastHashJoin [zip_str#31725], [zip_str#31711], Inner, BuildRight, false
+                              :- Project [properties#31753.COMM AS COMM#31755, properties#31753.POP20 AS POP20#31756L, properties#31753.ZCTA20 AS zip_str#31725]
+                              :  +- Filter (((isnotnull(properties#31753.POP20) AND (properties#31753.POP20 > 0)) AND isnotnull(properties#31753.ZCTA20)) AND isnotnull(properties#31753.COMM))
+                              :     +- FileScan json [properties#31753] Batched: false, DataFilters: [isnotnull(properties#31753.POP20), (properties#31753.POP20 > 0), isnotnull(properties#31753.ZCTA..., Format: JSON, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<properties:struct<BG20:string,BG20FIP_CURRENT:string,BGFIP20:string,CB20:string,CITY:strin...
+                              +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=21740]
+                                 +- Project [Zip Code#31705 AS zip_str#31711, cast(regexp_replace(Estimated Median Income#31707, [$,], , 1) as double) AS median_income#31717]
+                                    +- Filter isnotnull(Zip Code#31705)
+                                       +- FileScan csv [Zip Code#31705,Estimated Median Income#31707] Batched: false, DataFilters: [isnotnull(Zip Code#31705)], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_i..., PartitionFilters: [], PushedFilters: [IsNotNull(Zip Code)], ReadSchema: struct<Zip Code:string,Estimated Median Income:string>
+Click to add a cell.

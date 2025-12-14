@@ -1,0 +1,155 @@
+== Physical Plan ==
+AdaptiveSparkPlan (28)
++- Sort (27)
+   +- Exchange (26)
+      +- HashAggregate (25)
+         +- Exchange (24)
+            +- HashAggregate (23)
+               +- Project (22)
+                  +- Filter (21)
+                     +- Window (20)
+                        +- WindowGroupLimit (19)
+                           +- Sort (18)
+                              +- Exchange (17)
+                                 +- WindowGroupLimit (16)
+                                    +- Sort (15)
+                                       +- Project (14)
+                                          +- Project (13)
+                                             +- BroadcastNestedLoopJoin Cross BuildRight (12)
+                                                :- Project (7)
+                                                :  +- Filter (6)
+                                                :     +- InMemoryTableScan (1)
+                                                :           +- InMemoryRelation (2)
+                                                :                 +- Union (5)
+                                                :                    :- Scan csv  (3)
+                                                :                    +- Scan csv  (4)
+                                                +- BroadcastExchange (11)
+                                                   +- Project (10)
+                                                      +- Filter (9)
+                                                         +- Scan csv  (8)
+
+
+(1) InMemoryTableScan
+Output [3]: [DR_NO#23232, LAT#23258, LON#23259]
+Arguments: [DR_NO#23232, LAT#23258, LON#23259], [isnotnull(LAT#23258), isnotnull(LON#23259), (NOT (LAT#23258 = 0.0) OR NOT (LON#23259 = 0.0))]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#23232, Date Rptd#23233, DATE OCC#23234, TIME OCC#23235, AREA#23236, AREA NAME#23237, Rpt Dist No#23238, Part 1-2#23239, Crm Cd#23240, Crm Cd Desc#23241, Mocodes#23242, Vict Age#23243, Vict Sex#23244, Vict Descent#23245, Premis Cd#23246, Premis Desc#23247, Weapon Used Cd#23248, Weapon Desc#23249, Status#23250, Status Desc#23251, Crm Cd 1#23252, Crm Cd 2#23253, Crm Cd 3#23254, Crm Cd 4#23255, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@6ffedf51,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [3]: [DR_NO#23232, LAT#23258, LON#23259]
+Condition : ((isnotnull(LAT#23258) AND isnotnull(LON#23259)) AND (NOT (LAT#23258 = 0.0) OR NOT (LON#23259 = 0.0)))
+
+(7) Project
+Output [2]: [DR_NO#23232 AS crime_id#23451,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS crime_geom#23421]
+Input [3]: [DR_NO#23232, LAT#23258, LON#23259]
+
+(8) Scan csv 
+Output [3]: [X#23409, Y#23410, DIVISION#23412]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Police_Stations.csv]
+PushedFilters: [IsNotNull(Y), IsNotNull(X), Or(Not(EqualTo(Y,0.0)),Not(EqualTo(X,0.0)))]
+ReadSchema: struct<X:double,Y:double,DIVISION:string>
+
+(9) Filter
+Input [3]: [X#23409, Y#23410, DIVISION#23412]
+Condition : ((isnotnull(Y#23410) AND isnotnull(X#23409)) AND (NOT (Y#23410 = 0.0) OR NOT (X#23409 = 0.0)))
+
+(10) Project
+Output [2]: [DIVISION#23412 AS division#23465,  **org.apache.spark.sql.sedona_sql.expressions.ST_Point**   AS station_geom#23457]
+Input [3]: [X#23409, Y#23410, DIVISION#23412]
+
+(11) BroadcastExchange
+Input [2]: [division#23465, station_geom#23457]
+Arguments: IdentityBroadcastMode, [plan_id=8531]
+
+(12) BroadcastNestedLoopJoin
+Join type: Cross
+Join condition: None
+
+(13) Project
+Output [3]: [crime_id#23451, division#23465,  **org.apache.spark.sql.sedona_sql.expressions.ST_Distance**   AS distance_deg#27014]
+Input [4]: [crime_id#23451, crime_geom#23421, division#23465, station_geom#23457]
+
+(14) Project
+Output [4]: [crime_id#23451, division#23465, distance_deg#27014, (distance_deg#27014 * 111.0) AS distance_km#27024]
+Input [3]: [crime_id#23451, division#23465, distance_deg#27014]
+
+(15) Sort
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: [crime_id#23451 ASC NULLS FIRST, distance_deg#27014 ASC NULLS FIRST], false, 0
+
+(16) WindowGroupLimit
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: [crime_id#23451], [distance_deg#27014 ASC NULLS FIRST], row_number(), 1, Partial
+
+(17) Exchange
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: hashpartitioning(crime_id#23451, 1000), ENSURE_REQUIREMENTS, [plan_id=8539]
+
+(18) Sort
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: [crime_id#23451 ASC NULLS FIRST, distance_deg#27014 ASC NULLS FIRST], false, 0
+
+(19) WindowGroupLimit
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: [crime_id#23451], [distance_deg#27014 ASC NULLS FIRST], row_number(), 1, Final
+
+(20) Window
+Input [4]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024]
+Arguments: [row_number() windowspecdefinition(crime_id#23451, distance_deg#27014 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS rn#27036], [crime_id#23451], [distance_deg#27014 ASC NULLS FIRST]
+
+(21) Filter
+Input [5]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024, rn#27036]
+Condition : (rn#27036 = 1)
+
+(22) Project
+Output [2]: [division#23465, distance_km#27024]
+Input [5]: [crime_id#23451, division#23465, distance_deg#27014, distance_km#27024, rn#27036]
+
+(23) HashAggregate
+Input [2]: [division#23465, distance_km#27024]
+Keys [1]: [division#23465]
+Functions [2]: [partial_count(1), partial_avg(distance_km#27024)]
+Aggregate Attributes [3]: [count#27621L, sum#27623, count#27624L]
+Results [4]: [division#23465, count#27622L, sum#27625, count#27626L]
+
+(24) Exchange
+Input [4]: [division#23465, count#27622L, sum#27625, count#27626L]
+Arguments: hashpartitioning(division#23465, 1000), ENSURE_REQUIREMENTS, [plan_id=8547]
+
+(25) HashAggregate
+Input [4]: [division#23465, count#27622L, sum#27625, count#27626L]
+Keys [1]: [division#23465]
+Functions [2]: [count(1), avg(distance_km#27024)]
+Aggregate Attributes [2]: [count(1)#27054L, avg(distance_km#27024)#27056]
+Results [3]: [division#23465, count(1)#27054L AS crime_count#27055L, avg(distance_km#27024)#27056 AS avg_distance_km#27057]
+
+(26) Exchange
+Input [3]: [division#23465, crime_count#27055L, avg_distance_km#27057]
+Arguments: rangepartitioning(crime_count#27055L DESC NULLS LAST, 1000), ENSURE_REQUIREMENTS, [plan_id=8550]
+
+(27) Sort
+Input [3]: [division#23465, crime_count#27055L, avg_distance_km#27057]
+Arguments: [crime_count#27055L DESC NULLS LAST], true, 0
+
+(28) AdaptiveSparkPlan
+Output [3]: [division#23465, crime_count#27055L, avg_distance_km#27057]
+Arguments: isFinalPlan=false

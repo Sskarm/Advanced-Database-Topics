@@ -1,0 +1,616 @@
+
+
+=== default ===
+== Physical Plan ==
+AdaptiveSparkPlan (20)
++- Project (19)
+   +- BroadcastHashJoin LeftOuter BuildRight (18)
+      :- HashAggregate (12)
+      :  +- Exchange (11)
+      :     +- HashAggregate (10)
+      :        +- Project (9)
+      :           +- Filter (8)
+      :              +- Generate (7)
+      :                 +- Filter (6)
+      :                    +- InMemoryTableScan (1)
+      :                          +- InMemoryRelation (2)
+      :                                +- Union (5)
+      :                                   :- Scan csv  (3)
+      :                                   +- Scan csv  (4)
+      +- BroadcastExchange (17)
+         +- Project (16)
+            +- Project (15)
+               +- Filter (14)
+                  +- Scan text  (13)
+
+
+(1) InMemoryTableScan
+Output [1]: [Mocodes#39]
+Arguments: [Mocodes#39], [isnotnull(Mocodes#39), NOT (Mocodes#39 = )]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@55c21d1e,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [1]: [Mocodes#39]
+Condition : (isnotnull(Mocodes#39) AND NOT (Mocodes#39 = ))
+
+(7) Generate
+Input [1]: [Mocodes#39]
+Arguments: explode(split(Mocodes#39, \s+, -1)), false, [mo_code#12296]
+
+(8) Filter
+Input [1]: [mo_code#12296]
+Condition : NOT (trim(mo_code#12296, None) = )
+
+(9) Project
+Output [1]: [trim(mo_code#12296, None) AS mo_code#12299]
+Input [1]: [mo_code#12296]
+
+(10) HashAggregate
+Input [1]: [mo_code#12299]
+Keys [1]: [mo_code#12299]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#12876L]
+Results [2]: [mo_code#12299, count#12877L]
+
+(11) Exchange
+Input [2]: [mo_code#12299, count#12877L]
+Arguments: hashpartitioning(mo_code#12299, 1000), ENSURE_REQUIREMENTS, [plan_id=8732]
+
+(12) HashAggregate
+Input [2]: [mo_code#12299, count#12877L]
+Keys [1]: [mo_code#12299]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#12304L]
+Results [2]: [mo_code#12299, count(1)#12304L AS freq#12305L]
+
+(13) Scan text 
+Output [1]: [value#12274]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/MO_codes.txt]
+ReadSchema: struct<value:string>
+
+(14) Filter
+Input [1]: [value#12274]
+Condition : (NOT (split(value#12274, \s+, 2)[0] = ) AND isnotnull(split(value#12274, \s+, 2)[0]))
+
+(15) Project
+Output [1]: [split(value#12274, \s+, 2) AS parts#12276]
+Input [1]: [value#12274]
+
+(16) Project
+Output [2]: [parts#12276[0] AS mo_code#12280, parts#12276[1] AS mo_description#12281]
+Input [1]: [parts#12276]
+
+(17) BroadcastExchange
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=8735]
+
+(18) BroadcastHashJoin
+Left keys [1]: [mo_code#12299]
+Right keys [1]: [mo_code#12280]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Input [4]: [mo_code#12299, freq#12305L, mo_code#12280, mo_description#12281]
+
+(20) AdaptiveSparkPlan
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Arguments: isFinalPlan=false
+
+
+
+
+=== broadcast ===
+== Physical Plan ==
+AdaptiveSparkPlan (20)
++- Project (19)
+   +- BroadcastHashJoin LeftOuter BuildRight (18)
+      :- HashAggregate (12)
+      :  +- Exchange (11)
+      :     +- HashAggregate (10)
+      :        +- Project (9)
+      :           +- Filter (8)
+      :              +- Generate (7)
+      :                 +- Filter (6)
+      :                    +- InMemoryTableScan (1)
+      :                          +- InMemoryRelation (2)
+      :                                +- Union (5)
+      :                                   :- Scan csv  (3)
+      :                                   +- Scan csv  (4)
+      +- BroadcastExchange (17)
+         +- Project (16)
+            +- Project (15)
+               +- Filter (14)
+                  +- Scan text  (13)
+
+
+(1) InMemoryTableScan
+Output [1]: [Mocodes#39]
+Arguments: [Mocodes#39], [isnotnull(Mocodes#39), NOT (Mocodes#39 = )]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@55c21d1e,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [1]: [Mocodes#39]
+Condition : (isnotnull(Mocodes#39) AND NOT (Mocodes#39 = ))
+
+(7) Generate
+Input [1]: [Mocodes#39]
+Arguments: explode(split(Mocodes#39, \s+, -1)), false, [mo_code#12296]
+
+(8) Filter
+Input [1]: [mo_code#12296]
+Condition : NOT (trim(mo_code#12296, None) = )
+
+(9) Project
+Output [1]: [trim(mo_code#12296, None) AS mo_code#12299]
+Input [1]: [mo_code#12296]
+
+(10) HashAggregate
+Input [1]: [mo_code#12299]
+Keys [1]: [mo_code#12299]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#12876L]
+Results [2]: [mo_code#12299, count#12877L]
+
+(11) Exchange
+Input [2]: [mo_code#12299, count#12877L]
+Arguments: hashpartitioning(mo_code#12299, 1000), ENSURE_REQUIREMENTS, [plan_id=9109]
+
+(12) HashAggregate
+Input [2]: [mo_code#12299, count#12877L]
+Keys [1]: [mo_code#12299]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#12304L]
+Results [2]: [mo_code#12299, count(1)#12304L AS freq#12305L]
+
+(13) Scan text 
+Output [1]: [value#12274]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/MO_codes.txt]
+ReadSchema: struct<value:string>
+
+(14) Filter
+Input [1]: [value#12274]
+Condition : (NOT (split(value#12274, \s+, 2)[0] = ) AND isnotnull(split(value#12274, \s+, 2)[0]))
+
+(15) Project
+Output [1]: [split(value#12274, \s+, 2) AS parts#12276]
+Input [1]: [value#12274]
+
+(16) Project
+Output [2]: [parts#12276[0] AS mo_code#12280, parts#12276[1] AS mo_description#12281]
+Input [1]: [parts#12276]
+
+(17) BroadcastExchange
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=9112]
+
+(18) BroadcastHashJoin
+Left keys [1]: [mo_code#12299]
+Right keys [1]: [mo_code#12280]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Input [4]: [mo_code#12299, freq#12305L, mo_code#12280, mo_description#12281]
+
+(20) AdaptiveSparkPlan
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Arguments: isFinalPlan=false
+
+
+
+
+=== merge ===
+== Physical Plan ==
+AdaptiveSparkPlan (22)
++- Project (21)
+   +- SortMergeJoin LeftOuter (20)
+      :- Sort (13)
+      :  +- HashAggregate (12)
+      :     +- Exchange (11)
+      :        +- HashAggregate (10)
+      :           +- Project (9)
+      :              +- Filter (8)
+      :                 +- Generate (7)
+      :                    +- Filter (6)
+      :                       +- InMemoryTableScan (1)
+      :                             +- InMemoryRelation (2)
+      :                                   +- Union (5)
+      :                                      :- Scan csv  (3)
+      :                                      +- Scan csv  (4)
+      +- Sort (19)
+         +- Exchange (18)
+            +- Project (17)
+               +- Project (16)
+                  +- Filter (15)
+                     +- Scan text  (14)
+
+
+(1) InMemoryTableScan
+Output [1]: [Mocodes#39]
+Arguments: [Mocodes#39], [isnotnull(Mocodes#39), NOT (Mocodes#39 = )]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@55c21d1e,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [1]: [Mocodes#39]
+Condition : (isnotnull(Mocodes#39) AND NOT (Mocodes#39 = ))
+
+(7) Generate
+Input [1]: [Mocodes#39]
+Arguments: explode(split(Mocodes#39, \s+, -1)), false, [mo_code#12296]
+
+(8) Filter
+Input [1]: [mo_code#12296]
+Condition : NOT (trim(mo_code#12296, None) = )
+
+(9) Project
+Output [1]: [trim(mo_code#12296, None) AS mo_code#12299]
+Input [1]: [mo_code#12296]
+
+(10) HashAggregate
+Input [1]: [mo_code#12299]
+Keys [1]: [mo_code#12299]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#12876L]
+Results [2]: [mo_code#12299, count#12877L]
+
+(11) Exchange
+Input [2]: [mo_code#12299, count#12877L]
+Arguments: hashpartitioning(mo_code#12299, 1000), ENSURE_REQUIREMENTS, [plan_id=9486]
+
+(12) HashAggregate
+Input [2]: [mo_code#12299, count#12877L]
+Keys [1]: [mo_code#12299]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#12304L]
+Results [2]: [mo_code#12299, count(1)#12304L AS freq#12305L]
+
+(13) Sort
+Input [2]: [mo_code#12299, freq#12305L]
+Arguments: [mo_code#12299 ASC NULLS FIRST], false, 0
+
+(14) Scan text 
+Output [1]: [value#12274]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/MO_codes.txt]
+ReadSchema: struct<value:string>
+
+(15) Filter
+Input [1]: [value#12274]
+Condition : (NOT (split(value#12274, \s+, 2)[0] = ) AND isnotnull(split(value#12274, \s+, 2)[0]))
+
+(16) Project
+Output [1]: [split(value#12274, \s+, 2) AS parts#12276]
+Input [1]: [value#12274]
+
+(17) Project
+Output [2]: [parts#12276[0] AS mo_code#12280, parts#12276[1] AS mo_description#12281]
+Input [1]: [parts#12276]
+
+(18) Exchange
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: hashpartitioning(mo_code#12280, 1000), ENSURE_REQUIREMENTS, [plan_id=9490]
+
+(19) Sort
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: [mo_code#12280 ASC NULLS FIRST], false, 0
+
+(20) SortMergeJoin
+Left keys [1]: [mo_code#12299]
+Right keys [1]: [mo_code#12280]
+Join type: LeftOuter
+Join condition: None
+
+(21) Project
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Input [4]: [mo_code#12299, freq#12305L, mo_code#12280, mo_description#12281]
+
+(22) AdaptiveSparkPlan
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Arguments: isFinalPlan=false
+
+
+
+
+=== shuffle_hash ===
+== Physical Plan ==
+AdaptiveSparkPlan (20)
++- Project (19)
+   +- ShuffledHashJoin LeftOuter BuildRight (18)
+      :- HashAggregate (12)
+      :  +- Exchange (11)
+      :     +- HashAggregate (10)
+      :        +- Project (9)
+      :           +- Filter (8)
+      :              +- Generate (7)
+      :                 +- Filter (6)
+      :                    +- InMemoryTableScan (1)
+      :                          +- InMemoryRelation (2)
+      :                                +- Union (5)
+      :                                   :- Scan csv  (3)
+      :                                   +- Scan csv  (4)
+      +- Exchange (17)
+         +- Project (16)
+            +- Project (15)
+               +- Filter (14)
+                  +- Scan text  (13)
+
+
+(1) InMemoryTableScan
+Output [1]: [Mocodes#39]
+Arguments: [Mocodes#39], [isnotnull(Mocodes#39), NOT (Mocodes#39 = )]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@55c21d1e,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [1]: [Mocodes#39]
+Condition : (isnotnull(Mocodes#39) AND NOT (Mocodes#39 = ))
+
+(7) Generate
+Input [1]: [Mocodes#39]
+Arguments: explode(split(Mocodes#39, \s+, -1)), false, [mo_code#12296]
+
+(8) Filter
+Input [1]: [mo_code#12296]
+Condition : NOT (trim(mo_code#12296, None) = )
+
+(9) Project
+Output [1]: [trim(mo_code#12296, None) AS mo_code#12299]
+Input [1]: [mo_code#12296]
+
+(10) HashAggregate
+Input [1]: [mo_code#12299]
+Keys [1]: [mo_code#12299]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#12876L]
+Results [2]: [mo_code#12299, count#12877L]
+
+(11) Exchange
+Input [2]: [mo_code#12299, count#12877L]
+Arguments: hashpartitioning(mo_code#12299, 1000), ENSURE_REQUIREMENTS, [plan_id=9934]
+
+(12) HashAggregate
+Input [2]: [mo_code#12299, count#12877L]
+Keys [1]: [mo_code#12299]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#12304L]
+Results [2]: [mo_code#12299, count(1)#12304L AS freq#12305L]
+
+(13) Scan text 
+Output [1]: [value#12274]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/MO_codes.txt]
+ReadSchema: struct<value:string>
+
+(14) Filter
+Input [1]: [value#12274]
+Condition : (NOT (split(value#12274, \s+, 2)[0] = ) AND isnotnull(split(value#12274, \s+, 2)[0]))
+
+(15) Project
+Output [1]: [split(value#12274, \s+, 2) AS parts#12276]
+Input [1]: [value#12274]
+
+(16) Project
+Output [2]: [parts#12276[0] AS mo_code#12280, parts#12276[1] AS mo_description#12281]
+Input [1]: [parts#12276]
+
+(17) Exchange
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: hashpartitioning(mo_code#12280, 1000), ENSURE_REQUIREMENTS, [plan_id=9938]
+
+(18) ShuffledHashJoin
+Left keys [1]: [mo_code#12299]
+Right keys [1]: [mo_code#12280]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Input [4]: [mo_code#12299, freq#12305L, mo_code#12280, mo_description#12281]
+
+(20) AdaptiveSparkPlan
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Arguments: isFinalPlan=false
+
+
+
+
+=== shuffle_replicate_nl ===
+== Physical Plan ==
+AdaptiveSparkPlan (20)
++- Project (19)
+   +- BroadcastHashJoin LeftOuter BuildRight (18)
+      :- HashAggregate (12)
+      :  +- Exchange (11)
+      :     +- HashAggregate (10)
+      :        +- Project (9)
+      :           +- Filter (8)
+      :              +- Generate (7)
+      :                 +- Filter (6)
+      :                    +- InMemoryTableScan (1)
+      :                          +- InMemoryRelation (2)
+      :                                +- Union (5)
+      :                                   :- Scan csv  (3)
+      :                                   +- Scan csv  (4)
+      +- BroadcastExchange (17)
+         +- Project (16)
+            +- Project (15)
+               +- Filter (14)
+                  +- Scan text  (13)
+
+
+(1) InMemoryTableScan
+Output [1]: [Mocodes#39]
+Arguments: [Mocodes#39], [isnotnull(Mocodes#39), NOT (Mocodes#39 = )]
+
+(2) InMemoryRelation
+Arguments: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, ... 4 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@55c21d1e,StorageLevel(disk, memory, deserialized, 1 replicas),Union
+:- FileScan csv [DR_NO#29,Date Rptd#30,DATE OCC#31,TIME OCC#32,AREA#33,AREA NAME#34,Rpt Dist No#35,Part 1-2#36,Crm Cd#37,Crm Cd Desc#38,Mocodes#39,Vict Age#40,Vict Sex#41,Vict Descent#42,Premis Cd#43,Premis Desc#44,Weapon Used Cd#45,Weapon Desc#46,Status#47,Status Desc#48,Crm Cd 1#49,Crm Cd 2#50,Crm Cd 3#51,Crm Cd 4#52,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
++- FileScan csv [DR_NO#103,Date Rptd#104,DATE OCC#105,TIME OCC#106,AREA#107,AREA NAME#108,Rpt Dist No#109,Part 1-2#110,Crm Cd#111,Crm Cd Desc#112,Mocodes#113,Vict Age#114,Vict Sex#115,Vict Descent#116,Premis Cd#117,Premis Desc#118,Weapon Used Cd#119,Weapon Desc#120,Status#121,Status Desc#122,Crm Cd 1#123,Crm Cd 2#124,Crm Cd 3#125,Crm Cd 4#126,... 4 more fields] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_C..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist...
+,None)
+
+(3) Scan csv 
+Output [28]: [DR_NO#29, Date Rptd#30, DATE OCC#31, TIME OCC#32, AREA#33, AREA NAME#34, Rpt Dist No#35, Part 1-2#36, Crm Cd#37, Crm Cd Desc#38, Mocodes#39, Vict Age#40, Vict Sex#41, Vict Descent#42, Premis Cd#43, Premis Desc#44, Weapon Used Cd#45, Weapon Desc#46, Status#47, Status Desc#48, Crm Cd 1#49, Crm Cd 2#50, Crm Cd 3#51, Crm Cd 4#52, LOCATION#53, Cross Street#54, LAT#55, LON#56]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2010_2019.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(4) Scan csv 
+Output [28]: [DR_NO#103, Date Rptd#104, DATE OCC#105, TIME OCC#106, AREA#107, AREA NAME#108, Rpt Dist No#109, Part 1-2#110, Crm Cd#111, Crm Cd Desc#112, Mocodes#113, Vict Age#114, Vict Sex#115, Vict Descent#116, Premis Cd#117, Premis Desc#118, Weapon Used Cd#119, Weapon Desc#120, Status#121, Status Desc#122, Crm Cd 1#123, Crm Cd 2#124, Crm Cd 3#125, Crm Cd 4#126, LOCATION#127, Cross Street#128, LAT#129, LON#130]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/LA_Crime_Data/LA_Crime_Data_2020_2025.csv]
+ReadSchema: struct<DR_NO:int,Date Rptd:string,DATE OCC:string,TIME OCC:int,AREA:int,AREA NAME:string,Rpt Dist No:int,Part 1-2:int,Crm Cd:int,Crm Cd Desc:string,Mocodes:string,Vict Age:int,Vict Sex:string,Vict Descent:string,Premis Cd:int,Premis Desc:string,Weapon Used Cd:int,Weapon Desc:string,Status:string,Status Desc:string,Crm Cd 1:int,Crm Cd 2:int,Crm Cd 3:int,Crm Cd 4:int,LOCATION:string,Cross Street:string,LAT:double,LON:double>
+
+(5) Union
+
+(6) Filter
+Input [1]: [Mocodes#39]
+Condition : (isnotnull(Mocodes#39) AND NOT (Mocodes#39 = ))
+
+(7) Generate
+Input [1]: [Mocodes#39]
+Arguments: explode(split(Mocodes#39, \s+, -1)), false, [mo_code#12296]
+
+(8) Filter
+Input [1]: [mo_code#12296]
+Condition : NOT (trim(mo_code#12296, None) = )
+
+(9) Project
+Output [1]: [trim(mo_code#12296, None) AS mo_code#12299]
+Input [1]: [mo_code#12296]
+
+(10) HashAggregate
+Input [1]: [mo_code#12299]
+Keys [1]: [mo_code#12299]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#12876L]
+Results [2]: [mo_code#12299, count#12877L]
+
+(11) Exchange
+Input [2]: [mo_code#12299, count#12877L]
+Arguments: hashpartitioning(mo_code#12299, 1000), ENSURE_REQUIREMENTS, [plan_id=10326]
+
+(12) HashAggregate
+Input [2]: [mo_code#12299, count#12877L]
+Keys [1]: [mo_code#12299]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#12304L]
+Results [2]: [mo_code#12299, count(1)#12304L AS freq#12305L]
+
+(13) Scan text 
+Output [1]: [value#12274]
+Batched: false
+Location: InMemoryFileIndex [s3://initial-notebook-data-bucket-dblab-905418150721/project_data/MO_codes.txt]
+ReadSchema: struct<value:string>
+
+(14) Filter
+Input [1]: [value#12274]
+Condition : (NOT (split(value#12274, \s+, 2)[0] = ) AND isnotnull(split(value#12274, \s+, 2)[0]))
+
+(15) Project
+Output [1]: [split(value#12274, \s+, 2) AS parts#12276]
+Input [1]: [value#12274]
+
+(16) Project
+Output [2]: [parts#12276[0] AS mo_code#12280, parts#12276[1] AS mo_description#12281]
+Input [1]: [parts#12276]
+
+(17) BroadcastExchange
+Input [2]: [mo_code#12280, mo_description#12281]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=10329]
+
+(18) BroadcastHashJoin
+Left keys [1]: [mo_code#12299]
+Right keys [1]: [mo_code#12280]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Input [4]: [mo_code#12299, freq#12305L, mo_code#12280, mo_description#12281]
+
+(20) AdaptiveSparkPlan
+Output [3]: [mo_code#12299, freq#12305L, mo_description#12281]
+Arguments: isFinalPlan=false
+
+
+
